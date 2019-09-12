@@ -76,6 +76,7 @@ class Act(object):
         self._ground_truth = False
         self._gt_segments = None
         self.weight_path = None
+        self.path_to_mask_txt = None
 
     
     def _init_dataset(self, directory):
@@ -146,12 +147,12 @@ class Act(object):
                 y = int(event.ydata)
                 self.tk.write_log("Coordinates: x = %d y = %d", x, y)
                 
-                segment, size_segment, idx_segment, run_time = self.segmenter.get_segment(x, y)
+                segment, size_segment, idx_segment, run_time = self.segmenter.get_segment(x, y,  path_to_mask=self.path_to_mask_txt)
                 
                 if size_segment > 0:
                     self.tk.append_log("\nSegment = %d: %0.3f seconds", idx_segment, run_time)
                     
-                    self._image, run_time = self.segmenter.paint_segment(self._image, self.classes[self._current_class]["color"].value, x, y)
+                    self._image, run_time = self.segmenter.paint_segment(self._image, self.classes[self._current_class]["color"].value, x, y,)
                     self.tk.append_log("Painting segment: %0.3f seconds", run_time)
                     self.tk.refresh_image(self._image)
                     
@@ -176,6 +177,43 @@ class Act(object):
             
             self.segmenter.reset()
             self._gt_segments = None
+
+            # Debugging
+            print("abspath " + os.path.abspath(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test/test_rgb_image_downscaled.jpg
+            print("basename " + os.path.basename(imagename)) # test_rgb_image_downscaled.jpg
+            print("dirname " + os.path.dirname(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test
+            print("exists ", os.path.exists(imagename)) # True
+            print("cwd " + os.getcwd()) # /home/citywalk3r/thesis_git/pynovisao/src
+
+            print("_---------------------___")
+            print("JOINED PATH TO MASK", os.path.dirname(imagename) + '/mask.txt')
+            print("_---------------------___")
+
+            self.path_to_mask_txt = os.path.dirname(imagename) + '/mask.txt'
+            content = np.zeros((60, 80), dtype=int)
+
+            if os.path.exists(self.path_to_mask_txt):
+                print("Mask already exists in folder: ", os.path.dirname(imagename))
+                choice = self.query_yes_no("Do you want to reset it?", None)
+                if not choice:
+                    sys.stdout.flush()
+                    os._exit(0)
+                else:
+                    np.savetxt(self.path_to_mask_txt, content, fmt='%d')
+                    if os.path.isfile(self.path_to_mask_txt):
+                        print("Mask successfully reset")
+                    else:
+                        print("Could not reset the mask, please try again")
+            else:
+                print("Mask not found in path: ", os.path.dirname(imagename))
+                print("Creating a new mask...")
+
+                np.savetxt(self.path_to_mask_txt, content, fmt='%d')
+                if os.path.isfile(self.path_to_mask_txt):
+                    print("Mask successfully created")
+                else:
+                    print("Could not create the mask, please try again")
+
 
         
 
@@ -1068,4 +1106,36 @@ class Act(object):
 
         message = header_output + 'Saved in ' + matrix_path
         self.tk.write_log(message)
+
+    def query_yes_no(self, question, default="yes"):
+        """Ask a yes/no question via raw_input() and return their answer.
+
+        "question" is a string that is presented to the user.
+        "default" is the presumed answer if the user just hits <Enter>.
+            It must be "yes" (the default), "no" or None (meaning
+            an answer is required of the user).
+
+        The "answer" return value is True for "yes" or False for "no".
+        """
+        valid = {"yes": True, "y": True, "ye": True,
+                 "no": False, "n": False}
+        if default is None:
+            prompt = " [y/n] "
+        elif default == "yes":
+            prompt = " [Y/n] "
+        elif default == "no":
+            prompt = " [y/N] "
+        else:
+            raise ValueError("invalid default answer: '%s'" % default)
+
+        while True:
+            sys.stdout.write(question + prompt)
+            choice = input().lower()
+            if default is not None and choice == '':
+                return valid[default]
+            elif choice in valid:
+                return valid[choice]
+            else:
+                sys.stdout.write("Please respond with 'yes' or 'no' "
+                                 "(or 'y' or 'n').\n")
 

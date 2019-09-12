@@ -54,7 +54,7 @@ class Segmenter(object):
         pass
     
     @abstractmethod
-    def get_segment(self, px, py, idx_segment):
+    def get_segment(self, px, py, idx_segment, path_to_mask):
         """Return a specified segment using a index or position in image. 
         Implement this method to extend this class with a new segmenter algorithm.
         """

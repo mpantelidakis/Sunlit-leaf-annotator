@@ -60,8 +60,7 @@ class SkimageSegmenter(object):
         print(np.unique(self._segments))
         return np.unique(self._segments)
 
-    
-    def get_segment_skimage(self, px = 0, py = 0, idx_segment = None):
+    def get_segment_skimage(self, px = 0, py = 0, idx_segment = None, path_to_mask = None):
         """Return a specified segment using a index or position in image. 
         
         Parameters
@@ -102,13 +101,11 @@ class SkimageSegmenter(object):
         minas_mask_segment[self._segments == idx_segment] = 1
         # minas_idx_segment = idx_segment
 
-        txt = np.loadtxt("masks/mask.txt")
-        if txt.any():
-            txt = np.add(txt, minas_mask_segment)
-            np.savetxt('masks/mask.txt', txt, fmt='%d')
-        else:
-            print('Mask not found, creating a new mask')
-            np.savetxt('masks/mask.txt', minas_mask_segment, fmt='%d')
+        txt = np.loadtxt(path_to_mask)
+        txt = np.add(txt, minas_mask_segment)
+        np.savetxt(path_to_mask, txt, fmt='%d')
+
+        print ("Modified mask: ", path_to_mask)
 
         size_segment = mask_segment[self._segments == idx_segment].size
 
@@ -227,7 +224,7 @@ class SkimageSegmenter(object):
             Running time spent in milliseconds.
         """
         self._original_image = image
-        
+
         # Run the segmentation using the method passed
         start_time = TimeUtils.get_time()
         self._segments = method(img_as_float(image), **kwargs)
