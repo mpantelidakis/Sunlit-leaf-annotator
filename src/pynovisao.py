@@ -190,20 +190,15 @@ class Act(object):
             print("_---------------------___")
 
             self.path_to_mask_txt = os.path.dirname(imagename) + '/mask.txt'
-            content = np.zeros((60, 80), dtype=int)
+            content = np.zeros((343, 508), dtype=int)
 
             if os.path.exists(self.path_to_mask_txt):
                 print("Mask already exists in folder: ", os.path.dirname(imagename))
-                choice = self.query_yes_no("Do you want to reset it?", None)
-                if not choice:
-                    sys.stdout.flush()
-                    os._exit(0)
+                np.savetxt(self.path_to_mask_txt, content, fmt='%d')
+                if os.path.isfile(self.path_to_mask_txt):
+                    print("Mask successfully reset")
                 else:
-                    np.savetxt(self.path_to_mask_txt, content, fmt='%d')
-                    if os.path.isfile(self.path_to_mask_txt):
-                        print("Mask successfully reset")
-                    else:
-                        print("Could not reset the mask, please try again")
+                    print("Could not reset the mask, please try again")
             else:
                 print("Mask not found in path: ", os.path.dirname(imagename))
                 print("Creating a new mask...")
