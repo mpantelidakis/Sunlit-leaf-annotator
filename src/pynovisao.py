@@ -179,18 +179,20 @@ class Act(object):
             self._gt_segments = None
 
             # Debugging
-            print("abspath " + os.path.abspath(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test/test_rgb_image_downscaled.jpg
-            print("basename " + os.path.basename(imagename)) # test_rgb_image_downscaled.jpg
-            print("dirname " + os.path.dirname(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test
-            print("exists ", os.path.exists(imagename)) # True
-            print("cwd " + os.getcwd()) # /home/citywalk3r/thesis_git/pynovisao/src
+            #print("abspath " + os.path.abspath(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test/test_rgb_image_downscaled.jpg
+            #print("basename " + os.path.basename(imagename)) # test_rgb_image_downscaled.jpg
+            #print("dirname " + os.path.dirname(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test
+            #print("exists ", os.path.exists(imagename)) # True
+            #print("cwd " + os.getcwd()) # /home/citywalk3r/thesis_git/pynovisao/src
 
-            print("_---------------------___")
-            print("JOINED PATH TO MASK", os.path.dirname(imagename) + '/mask.txt')
-            print("_---------------------___")
+            #print("___---------------------___")
+            #print("JOINED PATH TO MASK", os.path.dirname(imagename) + '/mask.txt')
+            print("___---------------------___")
+            
 
             self.path_to_mask_txt = os.path.dirname(imagename) + '/mask.txt'
-            content = np.zeros((343, 508), dtype=int)
+            content = np.zeros((self._image.shape[0], self._image.shape[1]), dtype=int)
+            print(content.shape)
 
             if os.path.exists(self.path_to_mask_txt):
                 print("Mask already exists in folder: ", os.path.dirname(imagename))
