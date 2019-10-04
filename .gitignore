@@ -2,6 +2,7 @@
 data/*
 models_checkpoints/*
 venv/*
+.idea/
 !data/demo.jpg
 !data/pynovisao.png
 !data/demo/.gitignore
