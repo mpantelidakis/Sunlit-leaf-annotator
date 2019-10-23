@@ -57,7 +57,7 @@ class SkimageSegmenter(object):
         if self._segments is None:
             return []
 
-        print(np.unique(self._segments))
+        # print(np.unique(self._segments))
         return np.unique(self._segments)
 
     def get_segment_skimage(self, px = 0, py = 0, idx_segment = None, path_to_mask = None):

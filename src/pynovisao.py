@@ -72,6 +72,7 @@ class Act(object):
         self._init_dataset(args["dataset"])
         self._init_classes(args["classes"], args["colors"])
 
+        
         self._dataset_generator = True
         self._ground_truth = False
         self._gt_segments = None
@@ -159,10 +160,10 @@ class Act(object):
                     if self._ground_truth == True:
                         self._gt_segments[idx_segment] = self.classes[self._current_class]["name"].value
 
-                    elif self._dataset_generator == True:
-                        filepath = File.save_class_image(segment, self.dataset, self.classes[self._current_class]["name"].value, self._image_name, idx_segment)
-                        if filepath:
-                            self.tk.append_log("\nSegment saved in %s", filepath)
+                    # elif self._dataset_generator == True:
+                    #     filepath = File.save_class_image(segment, self.dataset, self.classes[self._current_class]["name"].value, self._image_name, idx_segment)
+                    #     if filepath:
+                    #         self.tk.append_log("\nSegment saved in %s", filepath)
         
         if imagename is None:
             imagename = self.tk.utils.ask_image_name()
@@ -179,16 +180,15 @@ class Act(object):
             self._gt_segments = None
 
             # Debugging
-            #print("abspath " + os.path.abspath(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test/test_rgb_image_downscaled.jpg
-            #print("basename " + os.path.basename(imagename)) # test_rgb_image_downscaled.jpg
-            #print("dirname " + os.path.dirname(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test
-            #print("exists ", os.path.exists(imagename)) # True
-            #print("cwd " + os.getcwd()) # /home/citywalk3r/thesis_git/pynovisao/src
+            # print("abspath " + os.path.abspath(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test/test_rgb_image_downscaled.jpg
+            # print("basename " + os.path.basename(imagename)) # test_rgb_image_downscaled.jpg
+            # print("dirname " + os.path.dirname(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test
+            # print("exists ", os.path.exists(imagename)) # True
+            # print("cwd " + os.getcwd()) # /home/citywalk3r/thesis_git/pynovisao/src
 
-            #print("___---------------------___")
-            #print("JOINED PATH TO MASK", os.path.dirname(imagename) + '/mask.txt')
-            print("___---------------------___")
-            
+            # print("___---------------------___")
+            # print("JOINED PATH TO MASK", os.path.dirname(imagename) + '/mask.txt')
+            # print("___---------------------___")
 
             self.path_to_mask_txt = os.path.dirname(imagename) + '/mask.txt'
             content = np.zeros((self._image.shape[0], self._image.shape[1]), dtype=int)
