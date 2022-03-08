@@ -32,8 +32,8 @@ def get_args():
 
     ap.add_argument("-d", "--dataset", required=False, help="Dataset path", default="../data/demo", type=str)
     
-    ap.add_argument("-cl", "--classes", required=False, help="Classes names", default=None, type=str)
-    ap.add_argument("-co", "--colors", required=False, help="Classes colors (X11 color)", default=None, type=str)
+    ap.add_argument("-cl", "--classes", required=False, help="Classes names", default="Sunlit Noise", type=str)
+    ap.add_argument("-co", "--colors", required=False, help="Classes colors (X11 color)", default="Green Brown", type=str)
     
     return vars(ap.parse_args())
 

@@ -21,7 +21,7 @@ from .skimage_segmenter import SkimageSegmenter
 class Quickshift(Segmenter, SkimageSegmenter):
     """Run Quickshift segmentation."""
 
-    def __init__(self, ratio = 0.5, kernel_size = 2.0, max_dist = 10.0, border_color = 'Yellow', border_outline = 'No'):
+    def __init__(self, ratio = 0.1, kernel_size = 2.1, max_dist = 15.0, border_color = 'Yellow', border_outline = 'No'):
         """Constructor.
 
         Parameters
@@ -116,7 +116,7 @@ class Quickshift(Segmenter, SkimageSegmenter):
         """
         return self.get_list_segments_skimage()
         
-    def get_segment(self, px = 0, py = 0, idx_segment = None, path_to_mask = None):
+    def get_segment(self, px = 0, py = 0, idx_segment = None, path_to_mask = None, color = None):
         """Return a specified segment using a index or position in image. 
         
         Parameters
@@ -139,7 +139,7 @@ class Quickshift(Segmenter, SkimageSegmenter):
         run_time : integer
             Running time spent in milliseconds.
         """
-        return self.get_segment_skimage(px, py, idx_segment, path_to_mask)
+        return self.get_segment_skimage(px, py, idx_segment, path_to_mask, color)
     
     def paint_segment(self, image, color, px = 0, py = 0, idx_segment = [], border = True, clear = False):
         """Paint a list of segments using a index or position in image.

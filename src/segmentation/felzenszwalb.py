@@ -21,7 +21,7 @@ from .skimage_segmenter import SkimageSegmenter
 class Felzenszwalb(Segmenter, SkimageSegmenter):
     """Run Felzenszwalb's method segmentation."""
     
-    def __init__(self, scale = 100.0, sigma = 1.0, min_size = 20, border_color = 'Yellow', border_outline = 'No'):
+    def __init__(self, scale = 200.0, sigma = 0.1, min_size = 50, border_color = 'Yellow', border_outline = 'No'):
         """Constructor.
 
         Parameters
@@ -111,7 +111,7 @@ class Felzenszwalb(Segmenter, SkimageSegmenter):
         """
         return self.get_list_segments_skimage()
         
-    def get_segment(self, px = 0, py = 0, idx_segment = None, path_to_mask = None):
+    def get_segment(self, px = 0, py = 0, idx_segment = None, path_to_mask = None, color = None):
         """Return a specified segment using a index or position in image. 
         
         Parameters
@@ -134,7 +134,7 @@ class Felzenszwalb(Segmenter, SkimageSegmenter):
         run_time : integer
             Running time spent in milliseconds.
         """
-        return self.get_segment_skimage(px, py, idx_segment, path_to_mask)
+        return self.get_segment_skimage(px, py, idx_segment, path_to_mask, color)
     
     def paint_segment(self, image, color, px = 0, py = 0, idx_segment = [], border = True, clear = False):
         """Paint a list of segments using a index or position in image.

@@ -1,8 +1,3 @@
 *.pyc
 data/*
-models_checkpoints/*
-venv/*
-!data/demo.jpg
-!data/pynovisao.png
-!data/demo/.gitignore
-!data/exemplo_dados_para_anova.txt
+!data/class_dict.csv

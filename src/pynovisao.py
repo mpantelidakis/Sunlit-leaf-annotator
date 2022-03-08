@@ -72,12 +72,11 @@ class Act(object):
         self._init_dataset(args["dataset"])
         self._init_classes(args["classes"], args["colors"])
 
-        
         self._dataset_generator = True
         self._ground_truth = False
         self._gt_segments = None
         self.weight_path = None
-        self.path_to_mask_txt = None
+        self.path_to_mask_png = None
 
     
     def _init_dataset(self, directory):
@@ -148,7 +147,7 @@ class Act(object):
                 y = int(event.ydata)
                 self.tk.write_log("Coordinates: x = %d y = %d", x, y)
                 
-                segment, size_segment, idx_segment, run_time = self.segmenter.get_segment(x, y,  path_to_mask=self.path_to_mask_txt)
+                segment, size_segment, idx_segment, run_time = self.segmenter.get_segment(x, y,  path_to_mask=self.path_to_mask_png, color = self.classes[self._current_class]["color"].value)
                 
                 if size_segment > 0:
                     self.tk.append_log("\nSegment = %d: %0.3f seconds", idx_segment, run_time)
@@ -180,33 +179,49 @@ class Act(object):
             self._gt_segments = None
 
             # Debugging
-            # print("abspath " + os.path.abspath(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test/test_rgb_image_downscaled.jpg
-            # print("basename " + os.path.basename(imagename)) # test_rgb_image_downscaled.jpg
-            # print("dirname " + os.path.dirname(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test
-            # print("exists ", os.path.exists(imagename)) # True
-            # print("cwd " + os.getcwd()) # /home/citywalk3r/thesis_git/pynovisao/src
+            #print("abspath " + os.path.abspath(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test/test_rgb_image_downscaled.jpg
+            #print("basename " + os.path.basename(imagename)) # test_rgb_image_downscaled.jpg
+            #print("dirname " + os.path.dirname(imagename)) # /home/citywalk3r/thesis_git/data_handler/images/test
+            #print("exists ", os.path.exists(imagename)) # True
+            #print("cwd " + os.getcwd()) # /home/citywalk3r/thesis_git/pynovisao/src
 
-            # print("___---------------------___")
-            # print("JOINED PATH TO MASK", os.path.dirname(imagename) + '/mask.txt')
-            # print("___---------------------___")
+            #print("___---------------------___")
+            #print("JOINED PATH TO MASK", os.path.dirname(imagename) + '/mask.txt')
+            print("___---------------------___")
+            
+            labels_dir = os.path.dirname(imagename).replace("train","train_labels")
+            print("Labels directory should be: " + labels_dir)
 
-            self.path_to_mask_txt = os.path.dirname(imagename) + '/mask.txt'
-            content = np.zeros((self._image.shape[0], self._image.shape[1]), dtype=int)
-            print(content.shape)
+            if not os.path.exists(labels_dir):
+                os.makedirs(labels_dir)
+            else:
+                print("Labels directory already exists.")
 
-            if os.path.exists(self.path_to_mask_txt):
-                print("Mask already exists in folder: ", os.path.dirname(imagename))
-                np.savetxt(self.path_to_mask_txt, content, fmt='%d')
-                if os.path.isfile(self.path_to_mask_txt):
+            self.path_to_mask_png = labels_dir + "/" + os.path.basename(imagename).replace(".jpg","_L.png")
+
+            print("Will try to create png mask with absolute path: " + self.path_to_mask_png)
+
+            if os.path.exists(self.path_to_mask_png):
+                print("Mask already exists in folder: ", labels_dir)
+
+                img = Image.open(imagename)
+                mask = Image.new( 'RGB', (img.size[0],img.size[1]), "Brown") # create a new brown image
+                mask.save(self.path_to_mask_png)
+
+                if os.path.isfile(self.path_to_mask_png):
                     print("Mask successfully reset")
                 else:
                     print("Could not reset the mask, please try again")
+                
             else:
-                print("Mask not found in path: ", os.path.dirname(imagename))
+                print("Mask not found in path: ", labels_dir)
                 print("Creating a new mask...")
-
-                np.savetxt(self.path_to_mask_txt, content, fmt='%d')
-                if os.path.isfile(self.path_to_mask_txt):
+            
+                img = Image.open(imagename)
+                mask = Image.new( 'RGB', (img.size[0],img.size[1]), "Brown") # create a new brown image
+                mask.save(self.path_to_mask_png)
+                
+                if os.path.isfile(self.path_to_mask_png):
                     print("Mask successfully created")
                 else:
                     print("Could not create the mask, please try again")

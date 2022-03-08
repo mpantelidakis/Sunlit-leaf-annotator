@@ -12,6 +12,7 @@ import cv2
 import numpy as np
 from skimage.segmentation import mark_boundaries
 from skimage.util import img_as_float, img_as_ubyte
+from PIL import Image
 
 from util.config import Config
 from util.utils import TimeUtils
@@ -57,10 +58,9 @@ class SkimageSegmenter(object):
         if self._segments is None:
             return []
 
-        # print(np.unique(self._segments))
         return np.unique(self._segments)
 
-    def get_segment_skimage(self, px = 0, py = 0, idx_segment = None, path_to_mask = None):
+    def get_segment_skimage(self, px = 0, py = 0, idx_segment = None, path_to_mask = None, color = None):
         """Return a specified segment using a index or position in image. 
         
         Parameters
@@ -97,15 +97,30 @@ class SkimageSegmenter(object):
         mask_segment = np.zeros(self._original_image.shape[:2], dtype="uint8")
         mask_segment[self._segments == idx_segment] = 255
 
-        minas_mask_segment = mask_segment = np.zeros(self._original_image.shape[:2], dtype="uint8")
-        minas_mask_segment[self._segments == idx_segment] = 1
-        # minas_idx_segment = idx_segment
+        
 
-        txt = np.loadtxt(path_to_mask)
-        txt = np.add(txt, minas_mask_segment)
-        np.savetxt(path_to_mask, txt, fmt='%d')
+        color = X11Colors.get_color(color)
+        print("COLOR: " + str(color))
+        
 
-        print ("Modified mask: ", path_to_mask)
+        minas_mask_segment = np.zeros(self._original_image.shape, dtype="uint8")
+        minas_mask_segment[self._segments == idx_segment] = color
+        
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        mask = Image.open(path_to_mask)
+        mask = np.array(mask)
+        
+        # Copy new segments to the already existing mask
+        modified_mask = np.where(((minas_mask_segment[:,:,0,None] == 0) & (minas_mask_segment[:,:,1,None] == 0) & (minas_mask_segment[:,:,2,None] == 0)),
+        mask,
+        minas_mask_segment)
+
+        final_mask = Image.fromarray( modified_mask)   
+        final_mask.save(path_to_mask)
+        # final_mask.show()
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         size_segment = mask_segment[self._segments == idx_segment].size
 
