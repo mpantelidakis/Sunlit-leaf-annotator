@@ -51,3 +51,7 @@ You can find the generated mask for your image inside data/train_labels
 Original software found at http://git.inovisao.ucdb.br/inovisao/pynovisao .
 
 NPOSL-30 https://opensource.org/licenses/NPOSL-3.0 - Free for non-profit use (E.g.: Education, scientific research, etc.). Contact Inovisão's Prof. Hemerson Pistori (pistori@ucdb.br), should any interest in commercial exploration of this software arise.
+
+###Demos
+* https://www.youtube.com/watch?v=lnoXL1hGTJI
+* https://www.youtube.com/watch?v=Q-cjCxUqW_Q
