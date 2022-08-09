@@ -17,7 +17,7 @@
 
 ### How to use
 
-Put all the images assigned to you inside data/train
+Place all images you wish to annotate in the data/train/ directory
 
 Once you are in the project's root folder
 
@@ -45,7 +45,7 @@ After the segmentation finishes, you will see that the image is now split and ea
 
 **Finally, if you open an already annotated image, the annotation will be reset, so keep track of your completed images**
 
-You can find the generated mask for your image inside data/train_labels
+You can find the generated mask for your image inside data/train_labels/
 
 
 Original software found at http://git.inovisao.ucdb.br/inovisao/pynovisao .
